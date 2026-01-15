@@ -1,20 +1,24 @@
 {
-  "name": "turborepo_template",
+  "name": "turborepo_template-org",
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "clean": "turbo run clean",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "prettier": "^3.7.4",
+    "@workspace/prettier-config": "workspace:*",
+    "prettier": "catalog:",
     "turbo": "^2.7.4",
-    "typescript": "5.9.2"
+    "typescript": "catalog:"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.28.0",
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "prettier": "@workspace/prettier-config"
 }
