@@ -3,14 +3,21 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "check-types": "turbo run check-types",
     "clean": "turbo run clean",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "lint": "turbo run lint",
+    "lint-staged": "lint-staged",
+    "prepare": "husky"
   },
+  "prettier": "@workspace/prettier-config",
   "devDependencies": {
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
     "@workspace/prettier-config": "workspace:*",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "catalog:",
     "turbo": "^2.7.4",
     "typescript": "catalog:"
@@ -19,6 +26,5 @@
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"
-  },
-  "prettier": "@workspace/prettier-config"
+  }
 }
