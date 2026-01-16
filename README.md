@@ -10,12 +10,11 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 - **Package Manager**: [pnpm](https://pnpm.io/) for efficient dependency management.
 - **Architecture**: Domain-Driven Design (DDD) & Hexagonal Architecture ready.
 - **Strict TypeScript**: Configured for safety with `noImplicitOverride` and strict mode.
-- **Testing**: [Vitest](https://vitest.dev/) with V8 coverage provider (no more `nyc`/`istanbul`).
-- **Data Validation**: [Effect Schema](https://effect.website/docs/schema/introduction) example in `packages/domain`.
+- **Tools**: [Vitest](https://vitest.dev/) for testing, [Effect Schema](https://effect.website/) for validation.
 - **Code Quality**:
-  - **ESLint**: React Compiler support, Turbo rules, and strict imports.
-  - **Prettier**: Automatic package.json sorting and Tailwind plugin.
-  - **Git Hooks**: Husky, Commitlint (Conventional Commits), and Lint-Staged.
+  - **ESLint**: Strict configs for TypeScript and modern frameworks.
+  - **Prettier**: Automatic sorting and standard formatting.
+  - **Git Hooks**: Husky, Commitlint (Conventional commits), and Lint-Staged pre-configured.
 - **CI/CD**: GitHub Actions workflow for automated testing.
 
 ## Quick Start
@@ -47,12 +46,12 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 
 ## Architecture
 
-This monorepo follows a clean architecture pattern:
+This monorepo follows a clean architecture pattern, adaptable to any frontend framework.
 
 ### Apps (`apps/*`)
 
-- **Current**: Next.js applications (`docs`, `web`).
 - **Role**: Entry points/Adapters for the UI.
+- **Examples**: Includes Next.js applications (`docs`, `web`) as references.
 
 ### Packages (`packages/*`)
 
@@ -60,7 +59,7 @@ This monorepo follows a clean architecture pattern:
   - _Example_: See `src/todos.ts` for an `Effect.Schema` model.
 - **`application`**: Use cases and orchestration (Future implementation).
 - **`infrastructure`**: External services, database connections (Future implementation).
-- **`ui`**: Shared React component library.
+- **`ui`**: Shared UI component library (React example included).
 
 ### Tooling (`tooling/*`)
 
