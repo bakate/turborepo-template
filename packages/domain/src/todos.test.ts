@@ -1,5 +1,6 @@
 import { Either, Schema } from "effect";
 import { describe, expect, it } from "vitest";
+
 import { Todo } from "./todos";
 
 describe("Todo Schema", () => {

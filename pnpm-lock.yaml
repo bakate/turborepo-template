@@ -18,6 +18,9 @@ catalogs:
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
+    vite:
+      specifier: ^7.2.4
+      version: 7.3.1
   vitest3:
     '@vitest/coverage-v8':
       specifier: 4.0.17
@@ -57,6 +60,25 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+
+  apps/web:
+    dependencies:
+      '@workspace/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      effect:
+        specifier: 'catalog:'
+        version: 3.19.14
+    devDependencies:
+      '@workspace/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vite:
+        specifier: 'catalog:'
+        version: 7.3.1(@types/node@22.19.6)(jiti@2.6.1)(yaml@2.8.2)
 
   packages/domain:
     dependencies:
