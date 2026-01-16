@@ -3,6 +3,18 @@ packages:
   - "packages/*"
   - "tooling/*"
 
+# -------------------------------------------------------------------------
+# PNPM Catalogs
+# -------------------------------------------------------------------------
+# Define strict versions for dependencies used across multiple packages.
+#
+# Referenced in package.json as: "dependency": "catalog:"
+#
+# Advantages:
+# 1. Single Source of Truth: Update version in ONE place for the entire repo.
+# 2. Deduplication: Guarantees every package uses the exact same version.
+# 3. Consistency: Prevents mismatches between apps/packages.
+# -------------------------------------------------------------------------
 catalog:
   eslint: ^9.28.0
   prettier: ^3.7.4
