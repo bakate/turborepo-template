@@ -16,11 +16,11 @@ app.innerHTML = `
 
 // Example Usage
 const exampleTodo = {
-  id: 1,
-  title: "Learn Effect Schema",
-  completed: false,
-  createdAt: new Date().toISOString(),
-  updatedAt: null,
+	id: 1,
+	title: "Learn Effect Schema",
+	completed: false,
+	createdAt: new Date().toISOString(),
+	updatedAt: null,
 };
 
 // Decode using the shared Schema
@@ -28,8 +28,8 @@ const decoded = Schema.decodeUnknownSync(Todo)(exampleTodo);
 
 // Display it
 const displayOpts = {
-  ...decoded,
-  createdAt: decoded.createdAt.toLocaleString(),
+	...decoded,
+	createdAt: decoded.createdAt.toLocaleString(),
 };
 
 document.querySelector("#todo-display")!.innerHTML = `

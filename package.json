@@ -3,22 +3,22 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "check": "turbo run check",
     "check-types": "turbo run check-types",
     "clean": "turbo run clean",
     "dev": "turbo run dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "turbo run format",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "prepare": "husky"
   },
-  "prettier": "@workspace/prettier-config",
   "devDependencies": {
+    "@biomejs/biome": "catalog:",
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
-    "@workspace/prettier-config": "workspace:*",
+    "@workspace/biome-config": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "catalog:",
     "turbo": "^2.7.4",
     "typescript": "catalog:"
   },

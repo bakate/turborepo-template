@@ -12,8 +12,7 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 - **Strict TypeScript**: Configured for safety with `noImplicitOverride` and strict mode.
 - **Tools**: [Vitest](https://vitest.dev/) for testing, [Effect Schema](https://effect.website/) for validation.
 - **Code Quality**:
-  - **ESLint**: Strict configs for TypeScript and modern frameworks.
-  - **Prettier**: Automatic sorting and standard formatting.
+  - **[Biome.js](https://biomejs.dev/)**: Unified, high-performance toolchain for linting and formatting.
   - **Git Hooks**: Husky, Commitlint (Conventional commits), and Lint-Staged pre-configured.
 - **CI/CD**: GitHub Actions workflow for automated testing.
 
@@ -39,8 +38,9 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 | `pnpm dev`           | Start development mode for all apps              |
 | `pnpm test`          | Run tests across the monorepo                    |
 | `pnpm test:coverage` | Run tests with V8 coverage reports               |
-| `pnpm lint`          | Lint all packages                                |
-| `pnpm format`        | Check formatting (Prettier)                      |
+| `pnpm lint`          | Lint all packages (Biome)                        |
+| `pnpm format`        | Check formatting (Biome)                         |
+| `pnpm check`         | Run lint and format checks (Biome)               |
 | `pnpm clean`         | Clean generic `node_modules` and build artifacts |
 | `pnpm typecheck`     | Run TypeScript type checking                     |
 
@@ -65,8 +65,7 @@ This monorepo follows a clean architecture pattern, adaptable to any frontend fr
 
 Shared configuration packages to ensure consistency:
 
-- **`eslint`**: Shared ESLint configs.
-- **`prettier`**: Shared Prettier config.
+- **`biome-config`**: Shared Biome config.
 - **`typescript`**: Shared `tsconfig` bases.
 - **`vitest-config`**: Shared Vitest and Coverage configurations.
 

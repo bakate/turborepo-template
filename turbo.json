@@ -14,13 +14,14 @@
       "cache": false,
       "persistent": false
     },
+    "check": {
+      "dependsOn": ["^check"]
+    },
     "format": {
-      "outputs": [".cache/.prettiercache"],
-      "outputLogs": "new-only"
+      "dependsOn": ["^format"]
     },
     "lint": {
-      "dependsOn": ["^build"],
-      "outputs": [".cache/.eslintcache"]
+      "dependsOn": ["^lint"]
     },
     "typecheck": {
       "dependsOn": ["^build"],
