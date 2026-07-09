@@ -23,10 +23,31 @@ catalog:
   typescript: ^7.0.2
   zod: 4.4.3
   vite: ^8.1.3
+  "@vitejs/plugin-react": ^6.0.3
   "@biomejs/biome": ^2.5.3
   "@types/node": ^26.1.1
 
 catalogs:
+  mantine9:
+    "@mantine/carousel": 9.4.1
+    "@mantine/charts": 9.4.1
+    "@mantine/code-highlight": 9.4.1
+    "@mantine/core": 9.4.1
+    "@mantine/dates": 9.4.1
+    "@mantine/dropzone": 9.4.1
+    "@mantine/form": 9.4.1
+    "@mantine/hooks": 9.4.1
+    "@mantine/modals": 9.4.1
+    "@mantine/notifications": 9.4.1
+    "@mantine/nprogress": 9.4.1
+    "@mantine/spotlight": 9.4.1
+    "@tabler/icons-react": 3.44.0
+    dayjs: 1.11.21
+    embla-carousel: 8.6.0
+    embla-carousel-react: 8.6.0
+    highlight.js: 11.11.1
+    recharts: 3.9.2
+
   nest11:
     "@nestjs/common": 11.1.28
     "@nestjs/config": 4.0.4
@@ -42,8 +63,8 @@ catalogs:
     tsx: 4.23.0
 
   react19:
-    react: 19.2.0
-    react-dom: 19.2.0
+    react: 19.2.7
+    react-dom: 19.2.7
     "@types/react": ^19.2.0
     "@types/react-dom": ^19.2.0
 
