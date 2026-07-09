@@ -24,7 +24,7 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
     pnpm install
     ```
 
-2.  **Start Development Server**
+2.  **Start Development Servers**
 
     ```sh
     pnpm dev
@@ -46,12 +46,47 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 
 ## Architecture
 
-This monorepo follows a clean architecture pattern, adaptable to any frontend framework.
+This monorepo follows a clean architecture pattern, with Nest.js as the backend
+HTTP adapter and Vite as the frontend entry point.
 
 ### Apps (`apps/*`)
 
-- **Role**: Entry points/Adapters for the UI.
-- **Examples**: Includes Next.js applications (`docs`, `web`) as references.
+- **`api`**: Nest.js HTTP API structured with DDD and hexagonal architecture.
+  - `domain`: entities, value objects, and business rules.
+  - `application`: use cases and ports.
+  - `infrastructure`: adapters such as repositories and external providers.
+  - `presentation`: HTTP controllers, request validation, and response mapping.
+- **`web`**: Vite frontend application.
+
+The API enables Helmet security headers, global rate limiting, environment-based
+CORS, Zod request validation, Scalar API documentation, and explicit dependency
+injection tokens where runtime reflection is not reliable enough.
+
+API errors use a stable response contract:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_FAILED",
+    "message": "Request validation failed.",
+    "details": []
+  }
+}
+```
+
+API environment variables are validated at startup:
+
+| Variable                  | Default | Description                      |
+| :------------------------ | :------ | :------------------------------- |
+| `PORT`                    | `3000`  | HTTP port                        |
+| `CORS_ORIGIN`             | unset   | Allowed CORS origin              |
+| `API_RATE_LIMIT_TTL_MS`   | `60000` | Rate-limit time window in ms     |
+| `API_RATE_LIMIT_LIMIT`    | `100`   | Max requests per rate-limit TTL  |
+
+API documentation is available at:
+
+- Scalar UI: `http://localhost:3000/api/docs`
+- OpenAPI JSON: `http://localhost:3000/api/docs/openapi.json`
 
 ### Packages (`packages/*`)
 

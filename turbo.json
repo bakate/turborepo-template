@@ -33,11 +33,24 @@
     "test": {
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/vitest.config.ts"],
       "dependsOn": ["transit", "@workspace/vitest-config#build"],
+      "outputs": []
+    },
+    "test:coverage": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/vitest.config.ts"],
+      "dependsOn": ["transit", "@workspace/vitest-config#build"],
       "outputs": ["coverage/**"]
     },
     "transit": {
       "dependsOn": ["^transit"]
     }
   },
-  "globalPassThroughEnv": ["NODE_ENV", "CI", "npm_lifecycle_event"]
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "npm_lifecycle_event",
+    "PORT",
+    "CORS_ORIGIN",
+    "API_RATE_LIMIT_TTL_MS",
+    "API_RATE_LIMIT_LIMIT"
+  ]
 }

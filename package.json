@@ -10,7 +10,9 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
