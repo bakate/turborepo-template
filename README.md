@@ -1,68 +1,109 @@
-# Enhanced Turborepo Template
+# Turborepo Template
 
-A robust, production-ready Turborepo template designed for scalablity and developer experience.
+A modern full-stack Turborepo template with a Nest.js API, a React/Vite frontend,
+shared domain models, XState application machines, Mantine UI exports, and a
+strict TypeScript/Biome toolchain.
 
 Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 
-## Features
+## Stack
 
-- **Monorepo Structure**: Powered by [Turborepo](https://turbo.build/).
-- **Package Manager**: [pnpm](https://pnpm.io/) for efficient dependency management.
-- **Architecture**: Domain-Driven Design (DDD) & Hexagonal Architecture ready.
-- **Strict TypeScript**: Configured for safety with `noImplicitOverride` and strict mode.
-- **Tools**: [Vitest](https://vitest.dev/) for testing, [Zod](https://zod.dev/) for validation.
-- **Code Quality**:
-  - **[Biome.js](https://biomejs.dev/)**: Unified, high-performance toolchain for linting and formatting.
-  - **Git Hooks**: Husky, Commitlint (Conventional commits), and Lint-Staged pre-configured.
-- **CI/CD**: GitHub Actions workflow for automated testing.
+- **Monorepo**: Turborepo + pnpm workspaces
+- **Backend**: Nest.js, DDD, hexagonal architecture, Zod validation, Scalar docs
+- **Frontend**: React, Vite, Mantine through a workspace UI package
+- **Application state**: XState machines in `packages/application`
+- **Domain**: Shared framework-free TypeScript models in `packages/domain`
+- **Quality**: Biome, Vitest, strict TypeScript, Husky, Commitlint, lint-staged
+
+## Requirements
+
+- Node.js `>=22.14`
+- pnpm `>=11`
 
 ## Quick Start
 
-1.  **Install Dependencies**
+```sh
+pnpm install
+pnpm dev
+```
 
-    ```sh
-    pnpm install
-    ```
+Default local URLs:
 
-2.  **Start Development Servers**
-
-    ```sh
-    pnpm dev
-    ```
+- API: `http://localhost:3000/api`
+- API docs: `http://localhost:3000/api/docs`
+- OpenAPI JSON: `http://localhost:3000/api/docs/openapi.json`
+- Web: `http://localhost:5173`
 
 ## Scripts
 
-| Command              | Description                                      |
-| :------------------- | :----------------------------------------------- |
-| `pnpm build`         | Build all apps and packages                      |
-| `pnpm dev`           | Start development mode for all apps              |
-| `pnpm test`          | Run tests across the monorepo                    |
-| `pnpm test:coverage` | Run tests with V8 coverage reports               |
-| `pnpm lint`          | Lint all packages (Biome)                        |
-| `pnpm format`        | Check formatting (Biome)                         |
-| `pnpm check`         | Run lint and format checks (Biome)               |
-| `pnpm clean`         | Clean generic `node_modules` and build artifacts |
-| `pnpm typecheck`     | Run TypeScript type checking                     |
+| Command | Description |
+| :-- | :-- |
+| `pnpm dev` | Start development tasks through Turborepo |
+| `pnpm build` | Build/typecheck all buildable apps and packages |
+| `pnpm test` | Run tests across the monorepo |
+| `pnpm test:coverage` | Run tests with coverage where configured |
+| `pnpm check` | Run Biome checks and write safe fixes |
+| `pnpm format` | Run Biome formatting |
+| `pnpm lint` | Run Biome linting |
+| `pnpm clean` | Remove local build/cache artifacts per workspace |
 
-## Architecture
+Recommended validation before committing:
 
-This monorepo follows a clean architecture pattern, with Nest.js as the backend
-HTTP adapter and Vite as the frontend entry point.
+```sh
+pnpm check
+pnpm test
+pnpm build
+```
 
-### Apps (`apps/*`)
+## Workspace Layout
 
-- **`api`**: Nest.js HTTP API structured with DDD and hexagonal architecture.
-  - `domain`: entities, value objects, and business rules.
-  - `application`: use cases and ports.
-  - `infrastructure`: adapters such as repositories and external providers.
-  - `presentation`: HTTP controllers, request validation, and response mapping.
-- **`web`**: Vite frontend application.
+```txt
+apps/
+  api/        Nest.js HTTP API
+  web/        React + Vite frontend
 
-The API enables Helmet security headers, global rate limiting, environment-based
-CORS, Zod request validation, Scalar API documentation, and explicit dependency
-injection tokens where runtime reflection is not reliable enough.
+packages/
+  application/  Framework-agnostic application workflows and ports
+  domain/       Shared domain models and validation
+  ui/           Mantine facade with explicit package exports
 
-API errors use a stable response contract:
+tooling/
+  biome-config/  Shared Biome configuration
+  typescript/    Shared TypeScript configurations
+  vitest-config/ Shared Vitest configuration helpers
+```
+
+## Backend Architecture
+
+The API lives in `apps/api` and uses a light DDD + hexagonal structure per
+module.
+
+```txt
+apps/api/src/modules/todos/
+  domain/          Entity and business rules
+  application/     Use cases and ports
+  infrastructure/  Technical adapters, repositories, providers
+  presentation/    HTTP controllers, request DTOs, OpenAPI schemas
+```
+
+Rules:
+
+- `domain` contains business rules and has no Nest dependency.
+- `application` contains use cases and depends on ports, not concrete adapters.
+- `infrastructure` implements ports.
+- `presentation` maps HTTP requests/responses to application use cases.
+- Controllers stay thin. They validate input, call use cases, and map errors.
+
+The API currently includes:
+
+- Helmet security headers
+- Rate limiting with `@nestjs/throttler`
+- Zod request validation
+- Stable error response body
+- Environment validation at startup
+- Scalar API documentation
+
+Error response shape:
 
 ```json
 {
@@ -74,60 +115,148 @@ API errors use a stable response contract:
 }
 ```
 
-API environment variables are validated at startup:
+Environment variables:
 
-| Variable                  | Default | Description                      |
-| :------------------------ | :------ | :------------------------------- |
-| `PORT`                    | `3000`  | HTTP port                        |
-| `CORS_ORIGIN`             | unset   | Allowed CORS origin              |
-| `API_RATE_LIMIT_TTL_MS`   | `60000` | Rate-limit time window in ms     |
-| `API_RATE_LIMIT_LIMIT`    | `100`   | Max requests per rate-limit TTL  |
+| Variable | Default | Description |
+| :-- | :-- | :-- |
+| `PORT` | `3000` | API HTTP port |
+| `CORS_ORIGIN` | unset | Allowed CORS origin |
+| `API_RATE_LIMIT_TTL_MS` | `60000` | Rate-limit window in milliseconds |
+| `API_RATE_LIMIT_LIMIT` | `100` | Max requests per rate-limit window |
 
-API documentation is available at:
+## Frontend Architecture
 
-- Scalar UI: `http://localhost:3000/api/docs`
-- OpenAPI JSON: `http://localhost:3000/api/docs/openapi.json`
+The frontend lives in `apps/web`. React should stay mostly responsible for UI
+composition. Business workflows belong in `packages/application`.
 
-### Packages (`packages/*`)
+```txt
+apps/web/src/
+  features/        React hooks that connect UI to application machines
+  infrastructure/  Browser adapters, HTTP gateways, storage adapters
+  main.tsx         App composition
+```
 
-- **`domain`**: The core business logic. Pure TypeScript, no framework dependencies.
-  - _Example_: See `src/todos.ts` for a Zod-backed model.
-- **`application`**: Use cases and orchestration (Future implementation).
-- **`infrastructure`**: External services, database connections (Future implementation).
-- **`ui`**: Shared UI component library (React example included).
+The Vite dev server proxies `/api` to `http://localhost:3000`, so the web app can
+call API routes through relative URLs.
 
-### Tooling (`tooling/*`)
+## Domain Package
 
-Shared configuration packages to ensure consistency:
+`packages/domain` contains framework-free business models and parsing logic.
 
-- **`biome-config`**: Shared Biome config.
-- **`typescript`**: Shared `tsconfig` bases.
-- **`vitest-config`**: Shared Vitest and Coverage configurations.
+Example responsibilities:
 
-## Quality Assurance
+- Branded identifiers
+- Entity/value object validation
+- Shared schemas for application and infrastructure boundaries
+- Domain-level tests
 
-### Git Hooks
+Do not import React, Nest, HTTP clients, browser APIs, or database clients here.
 
-We use `husky` to enforce quality checks before commits:
+## Application Package
 
-- **Commit Message**: Must follow [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: add user login`, `fix: resolve auth bug`).
-- **Pre-commit**: Runs `lint-staged` to ensure committed files are formatted and linted.
+`packages/application` contains framework-agnostic workflows. It currently uses
+XState machines for todo flows.
 
-### CI Workflow
+Current public APIs:
 
-GitHub Actions are configured in `.github/workflows/test.yml` to run:
+```ts
+import { createTodoMachine } from "@workspace/application/todos/machines/create-todo";
+import { todoListMachine } from "@workspace/application/todos/machines/todo-list";
+import type { TodoGateway } from "@workspace/application/todos/ports/todo-gateway";
+```
 
-- Installation
-- Build
-- Lint
-- Typecheck
-- Tests
+The package exposes explicit APIs through `package.json#exports`. Avoid barrel
+files like `src/index.ts` or `src/todos/index.ts`.
+
+### Gateways
+
+A gateway is an application port. It describes what the application needs from
+the outside world without knowing how it is implemented.
+
+```txt
+XState machine
+  -> TodoGateway port
+    -> TodoHttpGateway adapter in apps/web
+```
+
+Example:
+
+- `TodoGateway`: application contract
+- `TodoHttpGateway`: browser HTTP implementation using `fetch`
+
+This keeps workflows reusable if the UI changes from React to another frontend
+framework.
+
+## UI Package
+
+`packages/ui` is a Mantine facade. It does not define custom design-system
+components. It re-exports Mantine APIs through explicit entrypoints.
+
+Example imports:
+
+```ts
+import { Button, Stack, TextInput } from "@workspace/ui/core";
+import "@workspace/ui/styles.css";
+```
+
+Rules:
+
+- Prefer Mantine primitives directly through `@workspace/ui/*` exports.
+- Do not create custom CSS-heavy UI abstractions in the template.
+- Add new Mantine package entrypoints through `package.json#exports` instead of
+  a barrel file.
+
+## Testing
+
+Use Vitest for unit tests. Use `@faker-js/faker` for generated test data, but keep
+assertions deterministic by storing generated values in local constants.
+
+Good pattern:
+
+```ts
+const todoTitle = faker.lorem.words({ min: 2, max: 5 });
+
+expect(result.value.title).toBe(todoTitle);
+```
+
+When a domain type is branded, build fixtures through the domain parser instead
+of casting or manually shaping objects.
+
+## Code Style
+
+- TypeScript strict mode is enabled.
+- No `any` for application code.
+- Prefer explicit return-value errors over thrown business errors.
+- Use `readonly` data shapes where possible.
+- Use package `exports` for public APIs.
+- Keep imports scoped to the layer that owns the dependency.
+
+## Tooling
+
+Biome is the formatter and linter. VS Code should use the Biome extension as the
+default formatter for this workspace. Prettier and ESLint are intentionally not
+part of the active formatting path.
+
+Shared config lives in `tooling/biome-config` and is consumed by workspace-level
+`biome.json` files.
+
+## Git Hooks and CI
+
+The template includes Husky, Commitlint, and lint-staged.
+
+Commit messages should follow Conventional Commits:
+
+```txt
+feat: add todo creation machine
+fix: handle invalid todo gateway response
+```
+
+GitHub Actions are configured to install dependencies and run repository quality
+checks.
 
 ## Remote Caching
 
-Turborepo remote caching allows you to share build artifacts across your team and CI.
-
-To enable it:
+Turborepo remote caching can be enabled when needed:
 
 ```sh
 npx turbo login
@@ -136,6 +265,10 @@ npx turbo link
 
 ## Useful Links
 
-- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [Turborepo](https://turbo.build/repo/docs)
+- [Nest.js](https://docs.nestjs.com/)
+- [XState](https://stately.ai/docs/xstate)
+- [Mantine](https://mantine.dev/)
+- [Biome](https://biomejs.dev/)
 - [Zod](https://zod.dev/)
 - [Vitest](https://vitest.dev/)
