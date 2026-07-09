@@ -1,14 +1,44 @@
-import { Schema } from "effect";
+import { z } from "zod";
 
-// Defines the ID for a Todo
-export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"));
-export type TodoId = Schema.Schema.Type<typeof TodoId>;
+const todoIdSchema = z.number().int().positive().brand<"TodoId">();
 
-// Defines the Todo model
-export class Todo extends Schema.Class<Todo>("Todo")({
-	id: TodoId,
-	title: Schema.NonEmptyString,
-	completed: Schema.Boolean,
-	createdAt: Schema.Date,
-	updatedAt: Schema.OptionFromNullOr(Schema.Date), // Handles optional date that might be null
-}) {}
+export const todoSchema = z.object({
+	id: todoIdSchema,
+	title: z.string().min(1),
+	completed: z.boolean(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date().nullable(),
+});
+
+export type TodoId = z.infer<typeof todoIdSchema>;
+export type Todo = z.infer<typeof todoSchema>;
+
+export type ParseTodoResult =
+	| {
+			readonly success: true;
+			readonly todo: Todo;
+	  }
+	| {
+			readonly success: false;
+			readonly issues: readonly string[];
+	  };
+
+export function parseTodo({
+	input,
+}: {
+	readonly input: unknown;
+}): ParseTodoResult {
+	const result = todoSchema.safeParse(input);
+
+	if (result.success) {
+		return {
+			success: true,
+			todo: result.data,
+		};
+	}
+
+	return {
+		success: false,
+		issues: result.error.issues.map((issue) => issue.message),
+	};
+}

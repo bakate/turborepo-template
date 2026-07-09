@@ -1,39 +1,45 @@
-import { Todo } from "@workspace/domain/todos";
-import { Schema } from "effect";
+import { parseTodo } from "@workspace/domain/todos";
 
 import "./style.css";
 
-const app = document.querySelector<HTMLDivElement>("#app")!;
+const app = document.querySelector<HTMLDivElement>("#app");
 
-app.innerHTML = `
-  <div>
-    <h1>Domain Object Test</h1>
-    <div class="card">
+if (app === null) {
+	document.body.textContent = "Application root not found.";
+} else {
+	app.innerHTML = `
+    <div>
+      <h1>Domain Object Test</h1>
+      <div class="card">
         <p id="todo-display">Loading...</p>
+      </div>
     </div>
-  </div>
-`;
+  `;
+}
 
-// Example Usage
 const exampleTodo = {
 	id: 1,
-	title: "Learn Effect Schema",
+	title: "Validate a shared domain model",
 	completed: false,
 	createdAt: new Date().toISOString(),
 	updatedAt: null,
 };
 
-// Decode using the shared Schema
-const decoded = Schema.decodeUnknownSync(Todo)(exampleTodo);
+const result = parseTodo({ input: exampleTodo });
+const display = document.querySelector("#todo-display");
 
-// Display it
-const displayOpts = {
-	...decoded,
-	createdAt: decoded.createdAt.toLocaleString(),
-};
+if (display !== null && result.success) {
+	const displayTodo = {
+		...result.todo,
+		createdAt: result.todo.createdAt.toLocaleString(),
+		updatedAt: result.todo.updatedAt?.toLocaleString() ?? null,
+	};
 
-document.querySelector("#todo-display")!.innerHTML = `
-  <pre>${JSON.stringify(displayOpts, null, 2)}</pre>
-`;
+	display.innerHTML = `
+    <pre>${JSON.stringify(displayTodo, null, 2)}</pre>
+  `;
+}
 
-console.log("Decoded Todo:", decoded);
+if (display !== null && !result.success) {
+	display.textContent = result.issues.join(", ");
+}

@@ -10,7 +10,7 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 - **Package Manager**: [pnpm](https://pnpm.io/) for efficient dependency management.
 - **Architecture**: Domain-Driven Design (DDD) & Hexagonal Architecture ready.
 - **Strict TypeScript**: Configured for safety with `noImplicitOverride` and strict mode.
-- **Tools**: [Vitest](https://vitest.dev/) for testing, [Effect Schema](https://effect.website/) for validation.
+- **Tools**: [Vitest](https://vitest.dev/) for testing, [Zod](https://zod.dev/) for validation.
 - **Code Quality**:
   - **[Biome.js](https://biomejs.dev/)**: Unified, high-performance toolchain for linting and formatting.
   - **Git Hooks**: Husky, Commitlint (Conventional commits), and Lint-Staged pre-configured.
@@ -56,7 +56,7 @@ This monorepo follows a clean architecture pattern, adaptable to any frontend fr
 ### Packages (`packages/*`)
 
 - **`domain`**: The core business logic. Pure TypeScript, no framework dependencies.
-  - _Example_: See `src/todos.ts` for an `Effect.Schema` model.
+  - _Example_: See `src/todos.ts` for a Zod-backed model.
 - **`application`**: Use cases and orchestration (Future implementation).
 - **`infrastructure`**: External services, database connections (Future implementation).
 - **`ui`**: Shared UI component library (React example included).
@@ -102,5 +102,5 @@ npx turbo link
 ## Useful Links
 
 - [Turborepo Documentation](https://turbo.build/repo/docs)
-- [Effect Website](https://effect.website/)
+- [Zod](https://zod.dev/)
 - [Vitest](https://vitest.dev/)

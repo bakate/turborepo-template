@@ -13,8 +13,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@workspace/domain": "workspace:*",
-		"effect": "catalog:"
+		"@workspace/domain": "workspace:*"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",

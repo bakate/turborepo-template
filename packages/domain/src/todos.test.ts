@@ -1,9 +1,8 @@
-import { Either, Schema } from "effect";
 import { describe, expect, it } from "vitest";
 
-import { Todo } from "./todos";
+import { parseTodo } from "./todos";
 
-describe("Todo Schema", () => {
+describe("Todo schema", () => {
 	it("should decode a valid todo", () => {
 		const validTodo = {
 			id: 1,
@@ -13,10 +12,15 @@ describe("Todo Schema", () => {
 			updatedAt: null,
 		};
 
-		const result = Schema.decodeUnknownSync(Todo)(validTodo);
+		const result = parseTodo({ input: validTodo });
 
-		expect(result).toBeDefined();
-		expect(result.title).toBe("Test V8 Coverage");
+		expect(result.success).toBe(true);
+
+		if (!result.success) {
+			return;
+		}
+
+		expect(result.todo.title).toBe("Test V8 Coverage");
 	});
 
 	it("should fail on invalid data", () => {
@@ -25,11 +29,8 @@ describe("Todo Schema", () => {
 			title: "", // empty strings not allowed by NonEmptyString
 		};
 
-		const result = Schema.decodeUnknownEither(Todo)(invalidTodo);
+		const result = parseTodo({ input: invalidTodo });
 
-		expect(Either.isLeft(result)).toBe(true); // Should be a failure (left side of Either)
-		// In Effect 3 (and recent Schema), decodeUnknownEither returns an Either.
-		// We check if it is Left (error).
-		expect(result._tag).toBe("Left");
+		expect(result.success).toBe(false);
 	});
 });
