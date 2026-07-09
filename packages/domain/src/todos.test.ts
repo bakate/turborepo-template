@@ -1,14 +1,16 @@
+import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 
 import { parseTodo } from "./todos";
 
 describe("Todo schema", () => {
 	it("should decode a valid todo", () => {
+		const todoTitle = faker.lorem.words({ min: 2, max: 5 });
 		const validTodo = {
-			id: 1,
-			title: "Test V8 Coverage",
+			id: faker.string.uuid(),
+			title: todoTitle,
 			completed: false,
-			createdAt: new Date().toISOString(),
+			createdAt: faker.date.recent().toISOString(),
 			updatedAt: null,
 		};
 
@@ -20,7 +22,7 @@ describe("Todo schema", () => {
 			return;
 		}
 
-		expect(result.todo.title).toBe("Test V8 Coverage");
+		expect(result.todo.title).toBe(todoTitle);
 	});
 
 	it("should fail on invalid data", () => {

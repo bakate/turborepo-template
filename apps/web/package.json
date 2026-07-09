@@ -13,10 +13,13 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@workspace/application": "workspace:*",
 		"@workspace/domain": "workspace:*",
 		"@workspace/ui": "workspace:*",
+		"@xstate/react": "catalog:",
 		"react": "catalog:react19",
-		"react-dom": "catalog:react19"
+		"react-dom": "catalog:react19",
+		"xstate": "catalog:"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",

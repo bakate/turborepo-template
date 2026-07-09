@@ -7,18 +7,20 @@ import { ListTodosUseCase } from "./list-todos.use-case";
 
 describe("ListTodosUseCase", () => {
 	it("returns persisted todo snapshots", async () => {
+		const { faker } = await import("@faker-js/faker");
 		const todoRepository = createTodoRepository();
 		const createTodoUseCase = new CreateTodoUseCase(todoRepository);
 		const listTodosUseCase = new ListTodosUseCase(todoRepository);
+		const todoTitle = faker.lorem.words({ min: 2, max: 5 });
 
 		await createTodoUseCase.execute({
-			title: "Ship the API template",
+			title: todoTitle,
 		});
 
 		const todos = await listTodosUseCase.execute();
 
 		expect(todos).toHaveLength(1);
-		expect(todos[0]?.title).toBe("Ship the API template");
+		expect(todos[0]?.title).toBe(todoTitle);
 	});
 });
 

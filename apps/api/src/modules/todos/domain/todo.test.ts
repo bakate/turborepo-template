@@ -2,13 +2,15 @@ import { describe, expect, it } from "vitest";
 
 import { Todo } from "./todo";
 
-const now = new Date("2026-07-09T15:02:14.025Z");
-
 describe("Todo", () => {
-	it("creates a todo with normalized title", () => {
+	it("creates a todo with normalized title", async () => {
+		const { faker } = await import("@faker-js/faker");
+		const now = faker.date.recent();
+		const todoId = faker.string.uuid();
+		const todoTitle = faker.lorem.words({ min: 2, max: 5 });
 		const result = Todo.create({
-			id: "todo-id",
-			title: "  Ship the API template  ",
+			id: todoId,
+			title: `  ${todoTitle}  `,
 			now,
 		});
 
@@ -18,21 +20,22 @@ describe("Todo", () => {
 			return;
 		}
 
-		expect(result.value.id).toBe("todo-id");
+		expect(result.value.id).toBe(todoId);
 		expect(result.value.toSnapshot()).toEqual({
-			id: "todo-id",
-			title: "Ship the API template",
+			id: todoId,
+			title: todoTitle,
 			completed: false,
-			createdAt: "2026-07-09T15:02:14.025Z",
+			createdAt: now.toISOString(),
 			updatedAt: null,
 		});
 	});
 
-	it("rejects an empty title", () => {
+	it("rejects an empty title", async () => {
+		const { faker } = await import("@faker-js/faker");
 		const result = Todo.create({
-			id: "todo-id",
+			id: faker.string.uuid(),
 			title: "   ",
-			now,
+			now: faker.date.recent(),
 		});
 
 		expect(result).toEqual({

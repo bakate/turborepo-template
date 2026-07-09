@@ -6,11 +6,13 @@ import { CreateTodoUseCase } from "./create-todo.use-case";
 
 describe("CreateTodoUseCase", () => {
 	it("creates and saves a todo", async () => {
+		const { faker } = await import("@faker-js/faker");
 		const todoRepository = createTodoRepository();
 		const useCase = new CreateTodoUseCase(todoRepository);
+		const todoTitle = faker.lorem.words({ min: 2, max: 5 });
 
 		const result = await useCase.execute({
-			title: "Ship the API template",
+			title: todoTitle,
 		});
 
 		expect(result.success).toBe(true);
@@ -20,7 +22,7 @@ describe("CreateTodoUseCase", () => {
 			return;
 		}
 
-		expect(result.value.title).toBe("Ship the API template");
+		expect(result.value.title).toBe(todoTitle);
 		expect(result.value.completed).toBe(false);
 	});
 

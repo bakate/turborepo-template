@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const todoIdSchema = z.number().int().positive().brand<"TodoId">();
+const todoIdSchema = z.uuid().brand<"TodoId">();
 
 export const todoSchema = z.object({
 	id: todoIdSchema,

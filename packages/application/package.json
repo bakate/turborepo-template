@@ -1,22 +1,26 @@
 {
-	"name": "@workspace/domain",
+	"name": "@workspace/application",
 	"version": "0.1.0",
+	"private": true,
 	"type": "module",
 	"exports": {
-		"./todos": "./src/todos.ts"
+		"./todos/machines/todo-list": "./src/todos/machines/todo-list.machine.ts",
+		"./todos/ports/todo-gateway": "./src/todos/ports/todo-gateway.ts"
 	},
 	"scripts": {
 		"build": "tsc --noEmit",
-		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"check": "biome check --write .",
+		"clean": "rm -rf dist coverage .turbo .cache",
 		"format": "biome format --write .",
 		"lint": "biome lint .",
+		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest --watch",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"zod": "catalog:"
+		"@workspace/domain": "workspace:*",
+		"xstate": "catalog:"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",

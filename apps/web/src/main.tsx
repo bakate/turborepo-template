@@ -1,6 +1,6 @@
-import { parseTodo } from "@workspace/domain/todos";
 import {
 	Badge,
+	Button,
 	Card,
 	Code,
 	Container,
@@ -12,8 +12,10 @@ import {
 	Title,
 } from "@workspace/ui/core";
 import "@workspace/ui/styles.css";
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+
+import { useTodoListMachine } from "./features/todos/use-todo-list-machine";
 
 const customColor: MantineColorsTuple = [
 	"#f6eeff",
@@ -37,16 +39,16 @@ const theme = createTheme({
 	cursorType: "pointer",
 });
 
-const exampleTodo = {
-	id: 1,
-	title: "Validate a shared domain model",
-	completed: false,
-	createdAt: new Date().toISOString(),
-	updatedAt: null,
-};
-
 function App() {
-	const result = parseTodo({ input: exampleTodo });
+	const [todoListSnapshot, sendTodoListEvent] = useTodoListMachine();
+
+	useEffect(() => {
+		sendTodoListEvent({ type: "TODOS.LOAD" });
+	}, [sendTodoListEvent]);
+
+	const todos = todoListSnapshot.context.todos;
+	const isLoading = todoListSnapshot.hasTag("loading");
+	const errorMessage = todoListSnapshot.context.errorMessage;
 
 	return (
 		<MantineProvider theme={theme}>
@@ -56,20 +58,35 @@ function App() {
 					<Title order={1}>Frontend template</Title>
 					<Text c="dimmed">
 						This app consumes Mantine components through the workspace UI
-						package.
+						package and orchestrates data with framework-agnostic application
+						machines.
 					</Text>
+
+					<Card withBorder>
+						<Stack gap="sm">
+							<Button
+								loading={isLoading}
+								onClick={() => sendTodoListEvent({ type: "TODOS.RETRY" })}
+								variant="light"
+							>
+								Load todos
+							</Button>
+							{errorMessage !== null ? (
+								<Text c="red" size="sm">
+									{errorMessage}
+								</Text>
+							) : null}
+						</Stack>
+					</Card>
 
 					<Card withBorder>
 						<Code block>
 							{JSON.stringify(
-								result.success
-									? {
-											...result.todo,
-											createdAt: result.todo.createdAt.toLocaleString(),
-											updatedAt:
-												result.todo.updatedAt?.toLocaleString() ?? null,
-										}
-									: result.issues,
+								todos.map((todo) => ({
+									...todo,
+									createdAt: todo.createdAt.toLocaleString(),
+									updatedAt: todo.updatedAt?.toLocaleString() ?? null,
+								})),
 								null,
 								2,
 							)}

@@ -9,18 +9,27 @@ catalogs:
     '@biomejs/biome':
       specifier: ^2.5.3
       version: 2.5.3
+    '@faker-js/faker':
+      specifier: ^10.5.0
+      version: 10.5.0
     '@types/node':
       specifier: ^26.1.1
       version: 26.1.1
     '@vitejs/plugin-react':
       specifier: ^6.0.3
       version: 6.0.3
+    '@xstate/react':
+      specifier: ^6.1.0
+      version: 6.1.0
     typescript:
       specifier: ^7.0.2
       version: 7.0.2
     vite:
       specifier: ^8.1.3
       version: 8.1.3
+    xstate:
+      specifier: ^5.32.4
+      version: 5.32.4
     zod:
       specifier: 4.4.3
       version: 4.4.3
@@ -211,6 +220,9 @@ importers:
       '@biomejs/biome':
         specifier: 'catalog:'
         version: 2.5.3
+      '@faker-js/faker':
+        specifier: 'catalog:'
+        version: 10.5.0
       '@types/node':
         specifier: 'catalog:'
         version: 26.1.1
@@ -235,18 +247,27 @@ importers:
 
   apps/web:
     dependencies:
+      '@workspace/application':
+        specifier: workspace:*
+        version: link:../../packages/application
       '@workspace/domain':
         specifier: workspace:*
         version: link:../../packages/domain
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@xstate/react':
+        specifier: 'catalog:'
+        version: 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       react:
         specifier: catalog:react19
         version: 19.2.7
       react-dom:
         specifier: catalog:react19
         version: 19.2.7(react@19.2.7)
+      xstate:
+        specifier: 'catalog:'
+        version: 5.32.4
     devDependencies:
       '@biomejs/biome':
         specifier: 'catalog:'
@@ -273,6 +294,40 @@ importers:
         specifier: 'catalog:'
         version: 8.1.3(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.6.1)(tsx@4.23.0)(yaml@2.9.0)
 
+  packages/application:
+    dependencies:
+      '@workspace/domain':
+        specifier: workspace:*
+        version: link:../domain
+      xstate:
+        specifier: 'catalog:'
+        version: 5.32.4
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 'catalog:'
+        version: 2.5.3
+      '@faker-js/faker':
+        specifier: 'catalog:'
+        version: 10.5.0
+      '@vitest/coverage-v8':
+        specifier: catalog:vitest3
+        version: 4.1.10(vitest@4.1.10)
+      '@workspace/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome-config
+      '@workspace/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@workspace/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: catalog:vitest3
+        version: 4.1.10(@types/node@26.1.1)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1)(vite@8.1.3(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.6.1)(tsx@4.23.0)(yaml@2.9.0))
+
   packages/domain:
     dependencies:
       zod:
@@ -282,6 +337,9 @@ importers:
       '@biomejs/biome':
         specifier: 'catalog:'
         version: 2.5.3
+      '@faker-js/faker':
+        specifier: 'catalog:'
+        version: 10.5.0
       '@vitest/coverage-v8':
         specifier: catalog:vitest3
         version: 4.1.10(vitest@4.1.10)
@@ -831,6 +889,10 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@faker-js/faker@10.5.0':
+    resolution: {integrity: sha512-bsxD8WLS5lIj7aaoCx1YJkktqYj5vlBUE6HWzu2Q51ksrGJ0H737ECCKlFU7Yf8Br45z9t99frBp/J7kzbMPAg==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@floating-ui/core@1.7.5':
     resolution: {integrity: sha512-1Ih4WTWyw0+lKyFMcBHGbb5U5FtuHJuujoyyr5zTaWS5EYMeT6Jb2AuDeftsCsEuchO+mM2ij5+q9crhydzLhQ==}
@@ -1483,6 +1545,15 @@ packages:
 
   '@vitest/utils@4.1.10':
     resolution: {integrity: sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==}
+
+  '@xstate/react@6.1.0':
+    resolution: {integrity: sha512-ep9F0jGTI63B/jE8GHdMpUqtuz7yRebNaKv8EMUaiSi29NOglywc2X2YSOV/ygbIK+LtmgZ0q9anoEA2iBSEOw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      xstate: ^5.28.0
+    peerDependenciesMeta:
+      xstate:
+        optional: true
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -2692,6 +2763,15 @@ packages:
       '@types/react':
         optional: true
 
+  use-isomorphic-layout-effect@1.2.1:
+    resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   use-sidecar@1.1.3:
     resolution: {integrity: sha512-Fedw0aZvkhynoPYlA5WXrMCAMm+nSWdZt6lzJQ7Ok8S6Q+VsHmHpRWndVRJ8Be0ZbkfPc5LRYH+5XrzXcEeLRQ==}
     engines: {node: '>=10'}
@@ -2839,6 +2919,9 @@ packages:
 
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
+
+  xstate@5.32.4:
+    resolution: {integrity: sha512-E5WtDB8DBs2ZWliz2Ry9XfbSZTbBRcK/cwefBot04qQ/L5SLP16xpnTDU4/ZFXuXFhNxi7JP2RhuoGwBnM+S4A==}
 
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -3184,6 +3267,8 @@ snapshots:
     optional: true
 
   '@exodus/bytes@1.15.1': {}
+
+  '@faker-js/faker@10.5.0': {}
 
   '@floating-ui/core@1.7.5':
     dependencies:
@@ -3721,6 +3806,16 @@ snapshots:
       '@vitest/pretty-format': 4.1.10
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
+
+  '@xstate/react@6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)':
+    dependencies:
+      react: 19.2.7
+      use-isomorphic-layout-effect: 1.2.1(@types/react@19.2.17)(react@19.2.7)
+      use-sync-external-store: 1.6.0(react@19.2.7)
+    optionalDependencies:
+      xstate: 5.32.4
+    transitivePeerDependencies:
+      - '@types/react'
 
   accepts@2.0.0:
     dependencies:
@@ -4919,6 +5014,12 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.17
 
+  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.17)(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+    optionalDependencies:
+      '@types/react': 19.2.17
+
   use-sidecar@1.1.3(@types/react@19.2.17)(react@19.2.7):
     dependencies:
       detect-node-es: 1.1.0
@@ -5035,6 +5136,8 @@ snapshots:
   xml-name-validator@5.0.0: {}
 
   xmlchars@2.2.0: {}
+
+  xstate@5.32.4: {}
 
   y18n@5.0.8: {}
 
