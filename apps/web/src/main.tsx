@@ -9,12 +9,14 @@ import {
 	MantineProvider,
 	Stack,
 	Text,
+	TextInput,
 	Title,
 } from "@workspace/ui/core";
 import "@workspace/ui/styles.css";
-import { StrictMode, useEffect } from "react";
+import { StrictMode, type SubmitEvent, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
+import { useCreateTodoMachine } from "./features/todos/use-create-todo-machine";
 import { useTodoListMachine } from "./features/todos/use-todo-list-machine";
 
 const customColor: MantineColorsTuple = [
@@ -41,14 +43,36 @@ const theme = createTheme({
 
 function App() {
 	const [todoListSnapshot, sendTodoListEvent] = useTodoListMachine();
+	const [createTodoSnapshot, sendCreateTodoEvent] = useCreateTodoMachine();
+	const [todoTitle, setTodoTitle] = useState("");
 
 	useEffect(() => {
 		sendTodoListEvent({ type: "TODOS.LOAD" });
 	}, [sendTodoListEvent]);
 
+	useEffect(() => {
+		if (!createTodoSnapshot.matches("succeeded")) {
+			return;
+		}
+
+		setTodoTitle("");
+		sendTodoListEvent({ type: "TODOS.LOAD" });
+		sendCreateTodoEvent({ type: "TODO.RESET" });
+	}, [createTodoSnapshot, sendCreateTodoEvent, sendTodoListEvent]);
+
 	const todos = todoListSnapshot.context.todos;
 	const isLoading = todoListSnapshot.hasTag("loading");
+	const isSubmitting = createTodoSnapshot.hasTag("submitting");
 	const errorMessage = todoListSnapshot.context.errorMessage;
+	const createTodoErrorMessage = createTodoSnapshot.context.errorMessage;
+
+	function submitTodo(event: SubmitEvent<HTMLFormElement>) {
+		event.preventDefault();
+		sendCreateTodoEvent({
+			type: "TODO.CREATE",
+			title: todoTitle,
+		});
+	}
 
 	return (
 		<MantineProvider theme={theme}>
@@ -63,10 +87,31 @@ function App() {
 					</Text>
 
 					<Card withBorder>
+						<form onSubmit={submitTodo}>
+							<Stack gap="sm">
+								<TextInput
+									label="Todo title"
+									onChange={(event) => setTodoTitle(event.currentTarget.value)}
+									placeholder="Ship the frontend application layer"
+									value={todoTitle}
+								/>
+								<Button loading={isSubmitting} type="submit">
+									Create todo
+								</Button>
+								{createTodoErrorMessage !== null ? (
+									<Text c="red" size="sm">
+										{createTodoErrorMessage}
+									</Text>
+								) : null}
+							</Stack>
+						</form>
+					</Card>
+
+					<Card withBorder>
 						<Stack gap="sm">
 							<Button
 								loading={isLoading}
-								onClick={() => sendTodoListEvent({ type: "TODOS.RETRY" })}
+								onClick={() => sendTodoListEvent({ type: "TODOS.LOAD" })}
 								variant="light"
 							>
 								Load todos

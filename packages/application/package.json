@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"exports": {
+		"./todos/machines/create-todo": "./src/todos/machines/create-todo.machine.ts",
 		"./todos/machines/todo-list": "./src/todos/machines/todo-list.machine.ts",
 		"./todos/ports/todo-gateway": "./src/todos/ports/todo-gateway.ts"
 	},
