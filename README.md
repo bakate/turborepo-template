@@ -87,7 +87,8 @@ apps/api/src/modules/todos/
 Rules:
 
 - `domain` contains business rules and has no Nest dependency.
-- `application` contains use cases and depends on ports, not concrete adapters.
+- `application` contains plain TypeScript use cases and ports, with no Nest
+  dependency or decorators.
 - `infrastructure` implements ports.
 - `presentation` maps HTTP requests/responses to application use cases.
 - Controllers stay thin. They validate input, call use cases, and map errors.
