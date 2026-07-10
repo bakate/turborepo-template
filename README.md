@@ -1,8 +1,8 @@
 # Turborepo Template
 
 A modern full-stack Turborepo template with a Nest.js API, a React/Vite frontend,
-shared domain models, XState application machines, Mantine UI exports, and a
-strict TypeScript/Biome toolchain.
+shared client models, feature-local XState application machines, Mantine UI
+exports, and a strict TypeScript/Biome toolchain.
 
 Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 
@@ -11,7 +11,7 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 - **Monorepo**: Turborepo + pnpm workspaces
 - **Backend**: Nest.js, DDD, hexagonal architecture, Zod validation, Scalar docs
 - **Frontend**: React, Vite, Mantine through a workspace UI package
-- **Application state**: XState machines in `packages/application`
+- **Application state**: XState machines colocated with frontend features
 - **Domain**: Shared framework-free TypeScript models in `packages/domain`
 - **Quality**: Biome, Vitest, strict TypeScript, Husky, Commitlint, lint-staged
 
@@ -63,8 +63,7 @@ apps/
   web/        React + Vite frontend
 
 packages/
-  application/  Framework-agnostic application workflows and ports
-  domain/       Shared domain models and validation
+  domain/       Shared client models and validation
   ui/           Mantine facade with explicit package exports
 
 tooling/
@@ -126,12 +125,15 @@ Environment variables:
 
 ## Frontend Architecture
 
-The frontend lives in `apps/web`. React should stay mostly responsible for UI
-composition. Business workflows belong in `packages/application`.
+The frontend lives in `apps/web`. React stays mostly responsible for UI
+composition. Frontend workflows are colocated with the feature that owns them.
 
 ```txt
 apps/web/src/
-  features/        React hooks that connect UI to application machines
+  features/
+    todos/
+      application/  Framework-agnostic XState machines and ports
+      *.ts          React hooks that connect UI to application machines
   infrastructure/  Browser adapters, HTTP gateways, storage adapters
   main.tsx         App composition
 ```
@@ -152,21 +154,21 @@ Example responsibilities:
 
 Do not import React, Nest, HTTP clients, browser APIs, or database clients here.
 
-## Application Package
+## Frontend Application Layer
 
-`packages/application` contains framework-agnostic workflows. It currently uses
-XState machines for todo flows.
+`apps/web/src/features/todos/application` contains the framework-agnostic
+workflows owned by the todos frontend feature. It currently uses XState machines
+for todo flows.
 
-Current public APIs:
+The React hooks import their machines directly from the feature:
 
 ```ts
-import { createTodoMachine } from "@workspace/application/todos/machines/create-todo";
-import { todoListMachine } from "@workspace/application/todos/machines/todo-list";
-import type { TodoGateway } from "@workspace/application/todos/ports/todo-gateway";
+import { createTodoMachine } from "./application/machines/create-todo.machine";
+import { todoListMachine } from "./application/machines/todo-list.machine";
 ```
 
-The package exposes explicit APIs through `package.json#exports`. Avoid barrel
-files like `src/index.ts` or `src/todos/index.ts`.
+The machines and ports remain independent from React and browser APIs. Avoid
+barrel files such as `index.ts`; use explicit module imports.
 
 ### Gateways
 

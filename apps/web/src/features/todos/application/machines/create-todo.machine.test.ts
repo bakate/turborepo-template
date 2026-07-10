@@ -3,30 +3,21 @@ import { parseTodo, type Todo } from "@workspace/domain/todos";
 import { assert, describe, expect, it } from "vitest";
 import { createActor, waitFor } from "xstate";
 
-import { todoListMachine } from "./todo-list.machine";
+import { createTodoMachine } from "./create-todo.machine";
 
-describe("todoListMachine", () => {
-	it("loads todos through the injected gateway", async () => {
+describe("createTodoMachine", () => {
+	it("creates a todo through the injected gateway", async () => {
 		const todoTitle = faker.lorem.words({ min: 2, max: 5 });
-		const actor = createActor(todoListMachine, {
+		const actor = createActor(createTodoMachine, {
 			input: {
 				todoGateway: {
 					async listTodos() {
-						return {
-							success: true,
-							todos: [
-								createTodoFixture({
-									title: todoTitle,
-								}),
-							],
-						};
+						return { success: true, todos: [] };
 					},
 					async createTodo({ title }) {
 						return {
 							success: true,
-							todo: createTodoFixture({
-								title,
-							}),
+							todo: createTodoFixture({ title }),
 						};
 					},
 				},
@@ -34,22 +25,26 @@ describe("todoListMachine", () => {
 		});
 
 		actor.start();
-		actor.send({ type: "TODOS.LOAD" });
+		actor.send({ type: "TODO.CREATE", title: todoTitle });
 
-		const snapshot = await waitFor(actor, (state) => state.matches("ready"));
+		const snapshot = await waitFor(actor, (state) =>
+			state.matches("succeeded"),
+		);
 
-		expect(snapshot.context.todos).toHaveLength(1);
-		expect(snapshot.context.todos[0]?.title).toBe(todoTitle);
-
+		expect(snapshot.context.createdTodo?.title).toBe(todoTitle);
+		expect(snapshot.context.errorMessage).toBeNull();
 		actor.stop();
 	});
 
 	it("moves to failed when the gateway returns an application error", async () => {
 		const errorMessage = faker.lorem.sentence();
-		const actor = createActor(todoListMachine, {
+		const actor = createActor(createTodoMachine, {
 			input: {
 				todoGateway: {
 					async listTodos() {
+						return { success: true, todos: [] };
+					},
+					async createTodo() {
 						return {
 							success: false,
 							error: {
@@ -58,25 +53,19 @@ describe("todoListMachine", () => {
 							},
 						};
 					},
-					async createTodo({ title }) {
-						return {
-							success: true,
-							todo: createTodoFixture({
-								title,
-							}),
-						};
-					},
 				},
 			},
 		});
 
 		actor.start();
-		actor.send({ type: "TODOS.LOAD" });
+		actor.send({
+			type: "TODO.CREATE",
+			title: faker.lorem.words({ min: 2, max: 5 }),
+		});
 
 		const snapshot = await waitFor(actor, (state) => state.matches("failed"));
 
 		expect(snapshot.context.errorMessage).toBe(errorMessage);
-
 		actor.stop();
 	});
 });
@@ -97,6 +86,5 @@ function createTodoFixture({
 	});
 
 	assert(result.success);
-
 	return result.todo;
 }

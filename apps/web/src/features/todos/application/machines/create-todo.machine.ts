@@ -19,16 +19,9 @@ type CreateTodoInput = {
 };
 
 type CreateTodoEvent =
-	| {
-			readonly type: "TODO.CREATE";
-			readonly title: string;
-	  }
-	| {
-			readonly type: "TODO.RETRY";
-	  }
-	| {
-			readonly type: "TODO.RESET";
-	  };
+	| { readonly type: "TODO.CREATE"; readonly title: string }
+	| { readonly type: "TODO.RETRY" }
+	| { readonly type: "TODO.RESET" };
 
 const createTodoActor = fromPromise(
 	async ({
@@ -47,19 +40,14 @@ export const createTodoMachine = setup({
 		events: {} as CreateTodoEvent,
 		input: {} as CreateTodoInput,
 	},
-	actors: {
-		createTodo: createTodoActor,
-	},
+	actors: { createTodo: createTodoActor },
 	actions: {
 		assignSubmittedTitle: assign(({ event }) => {
 			if (event.type !== "TODO.CREATE") {
 				return {};
 			}
 
-			return {
-				errorMessage: null,
-				submittedTitle: event.title,
-			};
+			return { errorMessage: null, submittedTitle: event.title };
 		}),
 		assignUnexpectedError: assign({
 			errorMessage: () => "Unable to create todo.",
@@ -86,9 +74,7 @@ export const createTodoMachine = setup({
 					target: "submitting",
 					actions: "assignSubmittedTitle",
 				},
-				"TODO.RESET": {
-					actions: "resetFormState",
-				},
+				"TODO.RESET": { actions: "resetFormState" },
 			},
 		},
 		submitting: {
@@ -96,9 +82,7 @@ export const createTodoMachine = setup({
 			invoke: {
 				src: "createTodo",
 				input: ({ context }) => ({
-					command: {
-						title: context.submittedTitle,
-					},
+					command: { title: context.submittedTitle },
 					todoGateway: context.todoGateway,
 				}),
 				onDone: [
@@ -110,10 +94,7 @@ export const createTodoMachine = setup({
 								return {};
 							}
 
-							return {
-								createdTodo: event.output.todo,
-								errorMessage: null,
-							};
+							return { createdTodo: event.output.todo, errorMessage: null };
 						}),
 					},
 					{
@@ -123,9 +104,7 @@ export const createTodoMachine = setup({
 								return {};
 							}
 
-							return {
-								errorMessage: event.output.error.message,
-							};
+							return { errorMessage: event.output.error.message };
 						}),
 					},
 				],
@@ -141,10 +120,7 @@ export const createTodoMachine = setup({
 					target: "submitting",
 					actions: "assignSubmittedTitle",
 				},
-				"TODO.RESET": {
-					target: "idle",
-					actions: "resetFormState",
-				},
+				"TODO.RESET": { target: "idle", actions: "resetFormState" },
 			},
 		},
 		failed: {
@@ -153,13 +129,8 @@ export const createTodoMachine = setup({
 					target: "submitting",
 					actions: "assignSubmittedTitle",
 				},
-				"TODO.RETRY": {
-					target: "submitting",
-				},
-				"TODO.RESET": {
-					target: "idle",
-					actions: "resetFormState",
-				},
+				"TODO.RETRY": { target: "submitting" },
+				"TODO.RESET": { target: "idle", actions: "resetFormState" },
 			},
 		},
 	},

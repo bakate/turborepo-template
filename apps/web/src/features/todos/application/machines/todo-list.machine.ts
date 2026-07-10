@@ -9,25 +9,17 @@ type TodoListContext = {
 	readonly todoGateway: TodoGateway;
 };
 
-type TodoListInput = {
-	readonly todoGateway: TodoGateway;
-};
+type TodoListInput = { readonly todoGateway: TodoGateway };
 
 type TodoListEvent =
-	| {
-			readonly type: "TODOS.LOAD";
-	  }
-	| {
-			readonly type: "TODOS.RETRY";
-	  };
+	| { readonly type: "TODOS.LOAD" }
+	| { readonly type: "TODOS.RETRY" };
 
 const loadTodosActor = fromPromise(
 	async ({
 		input,
 	}: {
-		readonly input: {
-			readonly todoGateway: TodoGateway;
-		};
+		readonly input: { readonly todoGateway: TodoGateway };
 	}): Promise<ListTodosResult> => input.todoGateway.listTodos(),
 );
 
@@ -37,9 +29,7 @@ export const todoListMachine = setup({
 		events: {} as TodoListEvent,
 		input: {} as TodoListInput,
 	},
-	actors: {
-		loadTodos: loadTodosActor,
-	},
+	actors: { loadTodos: loadTodosActor },
 	actions: {
 		assignUnexpectedError: assign({
 			errorMessage: () => "Unable to load todos.",
@@ -55,19 +45,13 @@ export const todoListMachine = setup({
 	initial: "idle",
 	states: {
 		idle: {
-			on: {
-				"TODOS.LOAD": {
-					target: "loading",
-				},
-			},
+			on: { "TODOS.LOAD": { target: "loading" } },
 		},
 		loading: {
 			tags: ["loading"],
 			invoke: {
 				src: "loadTodos",
-				input: ({ context }) => ({
-					todoGateway: context.todoGateway,
-				}),
+				input: ({ context }) => ({ todoGateway: context.todoGateway }),
 				onDone: [
 					{
 						guard: ({ event }) => event.output.success,
@@ -77,10 +61,7 @@ export const todoListMachine = setup({
 								return {};
 							}
 
-							return {
-								todos: event.output.todos,
-								errorMessage: null,
-							};
+							return { todos: event.output.todos, errorMessage: null };
 						}),
 					},
 					{
@@ -90,9 +71,7 @@ export const todoListMachine = setup({
 								return {};
 							}
 
-							return {
-								errorMessage: event.output.error.message,
-							};
+							return { errorMessage: event.output.error.message };
 						}),
 					},
 				],
@@ -103,18 +82,10 @@ export const todoListMachine = setup({
 			},
 		},
 		ready: {
-			on: {
-				"TODOS.LOAD": {
-					target: "loading",
-				},
-			},
+			on: { "TODOS.LOAD": { target: "loading" } },
 		},
 		failed: {
-			on: {
-				"TODOS.RETRY": {
-					target: "loading",
-				},
-			},
+			on: { "TODOS.RETRY": { target: "loading" } },
 		},
 	},
 });

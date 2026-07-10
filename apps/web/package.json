@@ -10,10 +10,12 @@
 		"dev": "vite",
 		"format": "biome format --write .",
 		"lint": "biome lint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"test:watch": "vitest --watch"
 	},
 	"dependencies": {
-		"@workspace/application": "workspace:*",
 		"@workspace/domain": "workspace:*",
 		"@workspace/ui": "workspace:*",
 		"@xstate/react": "catalog:",
@@ -23,12 +25,15 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
+		"@faker-js/faker": "catalog:",
 		"@types/react": "catalog:react19",
 		"@types/react-dom": "catalog:react19",
+		"@vitest/coverage-v8": "catalog:vitest3",
 		"@vitejs/plugin-react": "catalog:",
 		"@workspace/biome-config": "workspace:*",
 		"@workspace/tsconfig": "workspace:*",
 		"typescript": "catalog:",
-		"vite": "catalog:"
+		"vite": "catalog:",
+		"vitest": "catalog:vitest3"
 	}
 }
