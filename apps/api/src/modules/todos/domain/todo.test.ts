@@ -21,13 +21,10 @@ describe("Todo", () => {
 		}
 
 		expect(result.value.id).toBe(todoId);
-		expect(result.value.toSnapshot()).toEqual({
-			id: todoId,
-			title: todoTitle,
-			completed: false,
-			createdAt: now.toISOString(),
-			updatedAt: null,
-		});
+		expect(result.value.title).toBe(todoTitle);
+		expect(result.value.completed).toBe(false);
+		expect(result.value.createdAt).toEqual(now);
+		expect(result.value.updatedAt).toBeNull();
 	});
 
 	it("rejects an empty title", async () => {

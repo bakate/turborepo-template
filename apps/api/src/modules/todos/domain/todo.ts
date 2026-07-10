@@ -19,14 +19,6 @@ type CreateTodoParams = {
 	readonly now: Date;
 };
 
-export type TodoSnapshot = {
-	readonly id: string;
-	readonly title: string;
-	readonly completed: boolean;
-	readonly createdAt: string;
-	readonly updatedAt: string | null;
-};
-
 export class Todo {
 	private constructor(private readonly properties: TodoProperties) {}
 
@@ -57,13 +49,21 @@ export class Todo {
 		return this.properties.id;
 	}
 
-	toSnapshot(): TodoSnapshot {
-		return {
-			id: this.properties.id,
-			title: this.properties.title,
-			completed: this.properties.completed,
-			createdAt: this.properties.createdAt.toISOString(),
-			updatedAt: this.properties.updatedAt?.toISOString() ?? null,
-		};
+	get title(): string {
+		return this.properties.title;
+	}
+
+	get completed(): boolean {
+		return this.properties.completed;
+	}
+
+	get createdAt(): Date {
+		return new Date(this.properties.createdAt);
+	}
+
+	get updatedAt(): Date | null {
+		const { updatedAt } = this.properties;
+
+		return updatedAt === null ? null : new Date(updatedAt);
 	}
 }

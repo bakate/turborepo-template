@@ -1,11 +1,13 @@
-import { type ParseTodoResult, parseTodo } from "@workspace/domain/todos";
-
 import type {
 	CreateTodoCommand,
 	CreateTodoResult,
 	ListTodosResult,
 	TodoGateway,
 } from "../../features/todos/application/ports/todo-gateway";
+import {
+	type ParseTodoResult,
+	parseTodo,
+} from "../../features/todos/model/todo";
 
 type ListTodosResponse = {
 	readonly todos: readonly unknown[];

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 
-import { parseTodo } from "./todos";
+import { parseTodo } from "./todo";
 
 describe("Todo schema", () => {
 	it("should decode a valid todo", () => {
@@ -27,8 +27,8 @@ describe("Todo schema", () => {
 
 	it("should fail on invalid data", () => {
 		const invalidTodo = {
-			id: "not-a-number",
-			title: "", // empty strings not allowed by NonEmptyString
+			id: "not-a-uuid",
+			title: "",
 		};
 
 		const result = parseTodo({ input: invalidTodo });

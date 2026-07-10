@@ -1,6 +1,6 @@
-import type { Todo } from "@workspace/domain/todos";
 import { assign, fromPromise, setup } from "xstate";
 
+import type { Todo } from "../../model/todo";
 import type { ListTodosResult, TodoGateway } from "../ports/todo-gateway";
 
 type TodoListContext = {

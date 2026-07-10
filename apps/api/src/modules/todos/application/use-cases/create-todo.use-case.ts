@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { Inject, Injectable } from "@nestjs/common";
 
-import { type Result, success } from "../../../../shared/result";
-import { Todo, type TodoError, type TodoSnapshot } from "../../domain/todo";
+import type { Result } from "../../../../shared/result";
+import { Todo, type TodoError } from "../../domain/todo";
 import {
 	TODO_REPOSITORY,
 	type TodoRepository,
@@ -21,7 +21,7 @@ export class CreateTodoUseCase {
 
 	async execute({
 		title,
-	}: CreateTodoCommand): Promise<Result<TodoSnapshot, TodoError>> {
+	}: CreateTodoCommand): Promise<Result<Todo, TodoError>> {
 		const result = Todo.create({
 			id: randomUUID(),
 			title,
@@ -36,8 +36,6 @@ export class CreateTodoUseCase {
 			todo: result.value,
 		});
 
-		return success({
-			value: result.value.toSnapshot(),
-		});
+		return result;
 	}
 }

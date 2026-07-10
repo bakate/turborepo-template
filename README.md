@@ -1,8 +1,8 @@
 # Turborepo Template
 
 A modern full-stack Turborepo template with a Nest.js API, a React/Vite frontend,
-shared client models, feature-local XState application machines, Mantine UI
-exports, and a strict TypeScript/Biome toolchain.
+feature-local client models and XState application machines, Mantine UI exports,
+and a strict TypeScript/Biome toolchain.
 
 Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 
@@ -12,7 +12,7 @@ Maintained by [Bakate](https://github.com/bakate/turborepo-template).
 - **Backend**: Nest.js, DDD, hexagonal architecture, Zod validation, Scalar docs
 - **Frontend**: React, Vite, Mantine through a workspace UI package
 - **Application state**: XState machines colocated with frontend features
-- **Domain**: Shared framework-free TypeScript models in `packages/domain`
+- **Client models**: Feature-local TypeScript models with Zod validation
 - **Quality**: Biome, Vitest, strict TypeScript, Husky, Commitlint, lint-staged
 
 ## Requirements
@@ -63,7 +63,6 @@ apps/
   web/        React + Vite frontend
 
 packages/
-  domain/       Shared client models and validation
   ui/           Mantine facade with explicit package exports
 
 tooling/
@@ -133,6 +132,7 @@ apps/web/src/
   features/
     todos/
       application/  Framework-agnostic XState machines and ports
+      model/        Client models and runtime response validation
       *.ts          React hooks that connect UI to application machines
   infrastructure/  Browser adapters, HTTP gateways, storage adapters
   main.tsx         App composition
@@ -141,18 +141,21 @@ apps/web/src/
 The Vite dev server proxies `/api` to `http://localhost:3000`, so the web app can
 call API routes through relative URLs.
 
-## Domain Package
+## Frontend Models
 
-`packages/domain` contains framework-free business models and parsing logic.
+`apps/web/src/features/todos/model` contains the client representation of todos
+and the Zod parsing used at HTTP boundaries. It is intentionally separate from
+the backend domain entity.
 
 Example responsibilities:
 
 - Branded identifiers
 - Entity/value object validation
-- Shared schemas for application and infrastructure boundaries
-- Domain-level tests
+- Runtime validation for remote data
+- Client-model tests
 
-Do not import React, Nest, HTTP clients, browser APIs, or database clients here.
+Do not import React, Nest, HTTP clients, browser APIs, or database clients into
+the model.
 
 ## Frontend Application Layer
 
@@ -221,7 +224,7 @@ const todoTitle = faker.lorem.words({ min: 2, max: 5 });
 expect(result.value.title).toBe(todoTitle);
 ```
 
-When a domain type is branded, build fixtures through the domain parser instead
+When a client-model type is branded, build fixtures through its parser instead
 of casting or manually shaping objects.
 
 ## Code Style

@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { parseTodo, type Todo } from "@workspace/domain/todos";
 import { assert, describe, expect, it } from "vitest";
 import { createActor, waitFor } from "xstate";
 
+import { parseTodo, type Todo } from "../../model/todo";
 import { createTodoMachine } from "./create-todo.machine";
 
 describe("createTodoMachine", () => {

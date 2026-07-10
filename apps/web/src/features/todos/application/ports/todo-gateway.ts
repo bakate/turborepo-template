@@ -1,4 +1,4 @@
-import type { Todo } from "@workspace/domain/todos";
+import type { Todo } from "../../model/todo";
 
 export type TodoGatewayError = {
 	readonly code: "TODO_GATEWAY_UNAVAILABLE" | "TODO_GATEWAY_INVALID_RESPONSE";

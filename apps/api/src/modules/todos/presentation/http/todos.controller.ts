@@ -18,25 +18,21 @@ import { createApiErrorBody } from "../../../../shared/presentation/api-error";
 import { ZodValidationPipe } from "../../../../shared/presentation/zod-validation.pipe";
 import { CreateTodoUseCase } from "../../application/use-cases/create-todo.use-case";
 import { ListTodosUseCase } from "../../application/use-cases/list-todos.use-case";
-import type { TodoSnapshot } from "../../domain/todo";
 import {
 	type CreateTodoRequest,
 	createTodoRequestSchema,
 } from "./create-todo.request";
+import {
+	type CreateTodoResponseDto,
+	type ListTodosResponseDto,
+	toTodoResponseDto,
+} from "./todo-response.dto";
 import {
 	apiErrorOpenApiSchema,
 	createTodoBodyOpenApiSchema,
 	createTodoResponseOpenApiSchema,
 	listTodosResponseOpenApiSchema,
 } from "./todos.openapi";
-
-type CreateTodoResponse = {
-	readonly todo: TodoSnapshot;
-};
-
-type ListTodosResponse = {
-	readonly todos: readonly TodoSnapshot[];
-};
 
 @ApiTags("Todos")
 @Controller("todos")
@@ -62,7 +58,7 @@ export class TodosController {
 	async create(
 		@Body(new ZodValidationPipe(createTodoRequestSchema))
 		request: CreateTodoRequest,
-	): Promise<CreateTodoResponse> {
+	): Promise<CreateTodoResponseDto> {
 		const result = await this.createTodoUseCase.execute({
 			title: request.title,
 		});
@@ -77,7 +73,7 @@ export class TodosController {
 		}
 
 		return {
-			todo: result.value,
+			todo: toTodoResponseDto({ todo: result.value }),
 		};
 	}
 
@@ -87,9 +83,11 @@ export class TodosController {
 		description: "Todos returned.",
 		schema: listTodosResponseOpenApiSchema,
 	})
-	async list(): Promise<ListTodosResponse> {
+	async list(): Promise<ListTodosResponseDto> {
+		const todos = await this.listTodosUseCase.execute();
+
 		return {
-			todos: await this.listTodosUseCase.execute(),
+			todos: todos.map((todo) => toTodoResponseDto({ todo })),
 		};
 	}
 }

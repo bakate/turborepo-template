@@ -16,12 +16,12 @@
 		"test:watch": "vitest --watch"
 	},
 	"dependencies": {
-		"@workspace/domain": "workspace:*",
 		"@workspace/ui": "workspace:*",
 		"@xstate/react": "catalog:",
 		"react": "catalog:react19",
 		"react-dom": "catalog:react19",
-		"xstate": "catalog:"
+		"xstate": "catalog:",
+		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",

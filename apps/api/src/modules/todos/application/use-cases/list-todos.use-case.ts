@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { TodoSnapshot } from "../../domain/todo";
+import type { Todo } from "../../domain/todo";
 import {
 	TODO_REPOSITORY,
 	type TodoRepository,
@@ -12,9 +12,7 @@ export class ListTodosUseCase {
 		private readonly todoRepository: TodoRepository,
 	) {}
 
-	async execute(): Promise<readonly TodoSnapshot[]> {
-		const todos = await this.todoRepository.findAll();
-
-		return todos.map((todo) => todo.toSnapshot());
+	async execute(): Promise<readonly Todo[]> {
+		return this.todoRepository.findAll();
 	}
 }
