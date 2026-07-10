@@ -9,6 +9,7 @@
 		"clean": "rm -rf dist coverage .turbo .cache",
 		"dev": "tsx watch src/main.ts",
 		"format": "biome format --write .",
+		"generate:openapi": "tsx scripts/generate-openapi.ts",
 		"lint": "biome lint .",
 		"start": "node dist/main.js",
 		"test": "vitest run",

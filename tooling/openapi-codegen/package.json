@@ -1,0 +1,18 @@
+{
+	"name": "@workspace/openapi-codegen",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"check": "biome check --write .",
+		"format": "biome format --write .",
+		"generate": "openapi-ts",
+		"lint": "biome lint ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"@hey-api/openapi-ts": "0.99.0",
+		"@workspace/biome-config": "workspace:*",
+		"typescript": "6.0.2"
+	}
+}

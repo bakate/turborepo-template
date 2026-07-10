@@ -1,4 +1,10 @@
 import type {
+	TodosControllerCreateData,
+	TodosControllerCreateResponse,
+	TodosControllerListData,
+	TodosControllerListResponse,
+} from "../../../../generated/api/types.gen";
+import type {
 	CreateTodoCommand,
 	CreateTodoResult,
 	ListTodosResult,
@@ -6,24 +12,19 @@ import type {
 } from "../../application/ports/todo-gateway";
 import { type ParseTodoResult, parseTodo } from "../../model/todo";
 
-type ListTodosResponse = {
-	readonly todos: readonly unknown[];
-};
-
-type CreateTodoResponse = {
-	readonly todo: unknown;
-};
+const todosUrl = "/api/todos" satisfies TodosControllerListData["url"];
 
 export class TodoHttpGateway implements TodoGateway {
 	async listTodos(): Promise<ListTodosResult> {
 		try {
-			const response = await fetch("/api/todos");
+			const response = await fetch(todosUrl);
 
 			if (!response.ok) {
 				return createListTodosUnavailableResult();
 			}
 
-			const body = (await response.json()) as Partial<ListTodosResponse>;
+			const body =
+				(await response.json()) as Partial<TodosControllerListResponse>;
 
 			if (!Array.isArray(body.todos)) {
 				return createListTodosInvalidResponseResult();
@@ -47,8 +48,11 @@ export class TodoHttpGateway implements TodoGateway {
 
 	async createTodo({ title }: CreateTodoCommand): Promise<CreateTodoResult> {
 		try {
-			const response = await fetch("/api/todos", {
-				body: JSON.stringify({ title }),
+			const requestBody = {
+				title,
+			} satisfies TodosControllerCreateData["body"];
+			const response = await fetch(todosUrl, {
+				body: JSON.stringify(requestBody),
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -59,7 +63,8 @@ export class TodoHttpGateway implements TodoGateway {
 				return createTodoUnavailableResult();
 			}
 
-			const body = (await response.json()) as Partial<CreateTodoResponse>;
+			const body =
+				(await response.json()) as Partial<TodosControllerCreateResponse>;
 			const result = parseTodo({ input: body.todo });
 
 			if (!result.success) {

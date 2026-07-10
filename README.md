@@ -43,6 +43,8 @@ Default local URLs:
 | `pnpm test` | Run tests across the monorepo |
 | `pnpm test:coverage` | Run tests with coverage where configured |
 | `pnpm check` | Run Biome checks and write safe fixes |
+| `pnpm generate:api` | Generate OpenAPI JSON and frontend API types |
+| `pnpm check:api-contract` | Fail when committed API artifacts are stale |
 | `pnpm format` | Run Biome formatting |
 | `pnpm lint` | Run Biome linting |
 | `pnpm clean` | Remove local build/cache artifacts per workspace |
@@ -68,6 +70,7 @@ packages/
 tooling/
   biome-config/  Shared Biome configuration
   typescript/    Shared TypeScript configurations
+  openapi-codegen/ Isolated OpenAPI type-generation tooling
   vitest-config/ Shared Vitest configuration helpers
 ```
 
@@ -141,6 +144,21 @@ apps/web/src/
 
 The Vite dev server proxies `/api` to `http://localhost:3000`, so the web app can
 call API routes through relative URLs.
+
+## API Contract Generation
+
+The API owns the HTTP contract. `pnpm generate:api` creates:
+
+- `apps/api/openapi/openapi.json` directly from the Nest application
+- `apps/web/src/generated/api/types.gen.ts` from that local OpenAPI document
+
+The generated types are consumed directly by the feature HTTP gateway. Runtime
+responses still pass through the feature Zod parser because generated TypeScript
+types do not validate untrusted JSON.
+
+The code generator is isolated in `tooling/openapi-codegen` with TypeScript 6.
+This prevents its compiler-API dependency from forcing the TypeScript 7
+applications to downgrade. Generated files must not be edited manually.
 
 ## Frontend Models
 

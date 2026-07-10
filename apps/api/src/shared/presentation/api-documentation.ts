@@ -1,5 +1,9 @@
 import type { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import {
+	DocumentBuilder,
+	type OpenAPIObject,
+	SwaggerModule,
+} from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 
 const documentationPath = "/api/docs";
@@ -23,15 +27,7 @@ export function setupApiDocumentation({
 }: {
 	readonly app: INestApplication;
 }): void {
-	const openApiConfig = new DocumentBuilder()
-		.setTitle("Turborepo Template API")
-		.setDescription("Nest.js API built with DDD and hexagonal architecture.")
-		.setVersion("0.1.0")
-		.addTag("Health")
-		.addTag("Todos")
-		.build();
-
-	const document = SwaggerModule.createDocument(app, openApiConfig);
+	const document = createApiDocument({ app });
 	const httpAdapter = app.getHttpAdapter();
 
 	httpAdapter.get(openApiJsonPath, (_request, response) => {
@@ -52,6 +48,22 @@ export function setupApiDocumentation({
 			url: openApiJsonPath,
 		}),
 	);
+}
+
+export function createApiDocument({
+	app,
+}: {
+	readonly app: INestApplication;
+}): OpenAPIObject {
+	const config = new DocumentBuilder()
+		.setTitle("Turborepo Template API")
+		.setDescription("Nest.js API built with DDD and hexagonal architecture.")
+		.setVersion("0.1.0")
+		.addTag("Health")
+		.addTag("Todos")
+		.build();
+
+	return SwaggerModule.createDocument(app, config);
 }
 
 type DocumentationResponse = {

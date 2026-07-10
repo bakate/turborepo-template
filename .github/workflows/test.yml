@@ -40,6 +40,9 @@ jobs:
         run: pnpm turbo run test
         env:
           CI: true
+
+      - name: Check generated API contract
+        run: pnpm check:api-contract
   # uncomment the following lines if you want to deploy to vercel and only if the test job is successful
   # deploy:
   #   needs: test
