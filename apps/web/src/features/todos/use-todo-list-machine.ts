@@ -1,7 +1,7 @@
 import { useMachine } from "@xstate/react";
 
-import { TodoHttpGateway } from "../../infrastructure/http/todo-http-gateway";
 import { todoListMachine } from "./application/machines/todo-list.machine";
+import { TodoHttpGateway } from "./infrastructure/http/todo-http-gateway";
 
 const todoGateway = new TodoHttpGateway();
 

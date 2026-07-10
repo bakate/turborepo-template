@@ -3,11 +3,8 @@ import type {
 	CreateTodoResult,
 	ListTodosResult,
 	TodoGateway,
-} from "../../features/todos/application/ports/todo-gateway";
-import {
-	type ParseTodoResult,
-	parseTodo,
-} from "../../features/todos/model/todo";
+} from "../../application/ports/todo-gateway";
+import { type ParseTodoResult, parseTodo } from "../../model/todo";
 
 type ListTodosResponse = {
 	readonly todos: readonly unknown[];

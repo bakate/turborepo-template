@@ -133,9 +133,9 @@ apps/web/src/
   features/
     todos/
       application/  Framework-agnostic XState machines and ports
+      infrastructure/ Browser adapters and HTTP gateways
       model/        Client models and runtime response validation
       *.ts          React hooks that connect UI to application machines
-  infrastructure/  Browser adapters, HTTP gateways, storage adapters
   main.tsx         App composition
 ```
 
