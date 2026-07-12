@@ -5,35 +5,36 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc && vite build",
-		"check": "biome check --write .",
+		"check": "biome check .",
 		"clean": "rm -rf dist coverage .turbo .cache",
 		"dev": "vite",
 		"format": "biome format --write .",
-		"lint": "biome lint .",
 		"preview": "vite preview",
-		"test": "vitest run",
-		"test:coverage": "vitest run --coverage",
-		"test:watch": "vitest --watch"
+		"test": "vitest run --passWithNoTests",
+		"test:coverage": "vitest run --coverage --passWithNoTests",
+		"test:watch": "vitest --watch",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@workspace/ui": "workspace:*",
-		"@xstate/react": "catalog:",
-		"react": "catalog:react19",
-		"react-dom": "catalog:react19",
-		"xstate": "catalog:",
+		"@mantine/core": "9.4.1",
+		"@tabler/icons-react": "3.44.0",
+		"@xstate/react": "^6.1.0",
+		"react": "19.2.7",
+		"react-dom": "19.2.7",
+		"xstate": "^5.32.4",
 		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
 		"@faker-js/faker": "catalog:",
-		"@types/react": "catalog:react19",
-		"@types/react-dom": "catalog:react19",
-		"@vitest/coverage-v8": "catalog:vitest3",
-		"@vitejs/plugin-react": "catalog:",
+		"@types/react": "^19.2.0",
+		"@types/react-dom": "^19.2.0",
+		"@vitest/coverage-v8": "catalog:",
+		"@vitejs/plugin-react": "^6.0.3",
 		"@workspace/biome-config": "workspace:*",
 		"@workspace/tsconfig": "workspace:*",
 		"typescript": "catalog:",
-		"vite": "catalog:",
-		"vitest": "catalog:vitest3"
+		"vite": "^8.1.3",
+		"vitest": "catalog:"
 	}
 }

@@ -6,6 +6,8 @@ const defaultRateLimitLimit = 100;
 
 const appConfigSchema = z.object({
 	PORT: z.coerce.number().int().positive().default(defaultPort),
+	PUBLIC_BASE_URL: z.url().default("http://localhost:3000/api"),
+	WEB_APP_URL: z.url().default("http://localhost:5173"),
 	CORS_ORIGIN: z.string().trim().min(1).optional(),
 	API_RATE_LIMIT_TTL_MS: z.coerce
 		.number()

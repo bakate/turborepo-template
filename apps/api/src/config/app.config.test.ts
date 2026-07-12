@@ -8,6 +8,8 @@ describe("validateAppConfig", () => {
 
 		expect(config).toEqual({
 			PORT: 3000,
+			PUBLIC_BASE_URL: "http://localhost:3000/api",
+			WEB_APP_URL: "http://localhost:5173",
 			CORS_ORIGIN: undefined,
 			API_RATE_LIMIT_TTL_MS: 60_000,
 			API_RATE_LIMIT_LIMIT: 100,

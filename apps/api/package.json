@@ -5,12 +5,11 @@
 	"main": "dist/main.js",
 	"scripts": {
 		"build": "tsc -p tsconfig.build.json",
-		"check": "biome check --write .",
+		"check": "biome check .",
 		"clean": "rm -rf dist coverage .turbo .cache",
 		"dev": "tsx watch src/main.ts",
 		"format": "biome format --write .",
 		"generate:openapi": "tsx scripts/generate-openapi.ts",
-		"lint": "biome lint .",
 		"start": "node dist/main.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
@@ -18,28 +17,27 @@
 		"typecheck": "tsc -p tsconfig.json --noEmit"
 	},
 	"dependencies": {
-		"@nestjs/common": "catalog:nest11",
-		"@nestjs/config": "catalog:nest11",
-		"@nestjs/core": "catalog:nest11",
-		"@nestjs/mapped-types": "catalog:nest11",
-		"@nestjs/platform-express": "catalog:nest11",
-		"@nestjs/swagger": "catalog:nest11",
-		"@nestjs/throttler": "catalog:nest11",
-		"@scalar/nestjs-api-reference": "catalog:nest11",
-		"helmet": "catalog:nest11",
-		"reflect-metadata": "catalog:nest11",
-		"rxjs": "catalog:nest11",
+		"@nestjs/common": "11.1.28",
+		"@nestjs/config": "4.0.4",
+		"@nestjs/core": "11.1.28",
+		"@nestjs/platform-express": "11.1.28",
+		"@nestjs/swagger": "11.4.5",
+		"@nestjs/throttler": "6.5.0",
+		"@scalar/nestjs-api-reference": "1.2.9",
+		"helmet": "8.2.0",
+		"reflect-metadata": "0.2.2",
+		"rxjs": "7.8.2",
 		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
 		"@faker-js/faker": "catalog:",
 		"@types/node": "catalog:",
-		"@vitest/coverage-v8": "catalog:vitest3",
+		"@vitest/coverage-v8": "catalog:",
 		"@workspace/biome-config": "workspace:*",
 		"@workspace/tsconfig": "workspace:*",
-		"tsx": "catalog:nest11",
+		"tsx": "4.23.0",
 		"typescript": "catalog:",
-		"vitest": "catalog:vitest3"
+		"vitest": "catalog:"
 	}
 }

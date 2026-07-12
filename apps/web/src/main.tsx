@@ -11,8 +11,8 @@ import {
 	Text,
 	TextInput,
 	Title,
-} from "@workspace/ui/core";
-import "@workspace/ui/styles.css";
+} from "@mantine/core";
+import "@mantine/core/styles.css";
 import { StrictMode, type SubmitEvent, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 

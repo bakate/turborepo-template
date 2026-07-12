@@ -19,7 +19,9 @@ const scalarContentSecurityPolicy = [
 	"script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
 	"script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
 	"connect-src 'self'",
-	"upgrade-insecure-requests",
+	...(process.env.NODE_ENV === "production"
+		? ["upgrade-insecure-requests"]
+		: []),
 ].join("; ");
 
 export function setupApiDocumentation({
